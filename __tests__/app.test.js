@@ -16,7 +16,6 @@ describe("GET-/api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.length).toBe(4);
         body.forEach((category) => {
           expect(category).toEqual(
@@ -26,6 +25,48 @@ describe("GET-/api/categories", () => {
             })
           );
         });
+      });
+  });
+  test("GET - 404: Route not found", () => {
+    return request(app)
+      .get("/api/categorie")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
+      });
+  });
+});
+
+describe("GET-/api/reviews", () => {
+  test("GET-200: Responds with array of review objects", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(13);
+        body.forEach((category) => {
+          expect(category).toEqual(
+            expect.objectContaining({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              designer: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("GET - 404: Route not found", () => {
+    return request(app)
+      .get("/api/categorie")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
       });
   });
 });
