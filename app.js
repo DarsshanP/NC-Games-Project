@@ -1,5 +1,5 @@
 const express = require("express");
-const { getCategories, getReviews } = require("./controllers/controller");
+const { getCategories, getReviews } = require("./controllers/index");
 const app = express();
 
 app.get("/api/categories", getCategories);
