@@ -55,7 +55,7 @@ describe("GET-/api/reviews", () => {
               created_at: expect.any(String),
               designer: expect.any(String),
               votes: expect.any(Number),
-              comment_count: expect.any(String),
+              comment_count: expect.any(Number),
             })
           );
         });
