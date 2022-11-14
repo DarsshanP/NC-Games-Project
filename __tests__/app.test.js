@@ -7,7 +7,7 @@ const testData = require("../db/data/test-data");
 beforeEach(() => seed(testData));
 
 afterAll(() => {
-  db.end();
+  return db.end();
 });
 
 describe("GET-/api/categories", () => {
@@ -17,7 +17,7 @@ describe("GET-/api/categories", () => {
       .expect(200)
       .then(({ body }) => {
         console.log(body);
-        expect(body).toBeInstanceOf(Array);
+        expect(body.length).toBe(4);
         body.forEach((category) => {
           expect(category).toEqual(
             expect.objectContaining({
