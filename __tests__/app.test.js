@@ -114,6 +114,15 @@ describe.only("/api/reviews/:review_id/comments", () => {
         });
       });
   });
+  test("GET - 200: Returns an empty array if a review has no comments", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(0);
+        expect(body).toEqual([]);
+      });
+  });
   test("GET - 400: Bad request", () => {
     return request(app)
       .get("/api/reviews/dog/comments")
@@ -125,7 +134,7 @@ describe.only("/api/reviews/:review_id/comments", () => {
   test("GET - 400: Good request but id does not exist", () => {
     return request(app)
       .get("/api/reviews/9999/comments")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");
       });
