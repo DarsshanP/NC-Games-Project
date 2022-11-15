@@ -92,6 +92,45 @@ describe("/api/reviews/:review_id", () => {
       });
   });
 });
+describe.only("/api/reviews/:review_id/comments", () => {
+  test("GET - 200: Returns the review with the correct ID", () => {
+    return request(app)
+      .get("/api/reviews/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(3);
+        expect(body).toBeSortedBy("created_at", { descending: true });
+        body.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("GET - 400: Bad request", () => {
+    return request(app)
+      .get("/api/reviews/dog/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("GET - 400: Good request but id does not exist", () => {
+    return request(app)
+      .get("/api/reviews/9999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+});
 
 describe("404: Route not found", () => {
   test("GET - 404: Route not found", () => {

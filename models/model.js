@@ -34,3 +34,19 @@ exports.fetchReviewById = (review_id) => {
     return rows[0];
   });
 };
+
+exports.fetchCommentByReview = (review_id) => {
+  let queryStr = `
+        SELECT  
+        comment_id, votes, created_at, author, body, review_id 
+        FROM comments WHERE review_id = $1
+        ORDER BY created_at DESC
+        `;
+
+  return db.query(queryStr, [review_id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Id not found" });
+    }
+    return rows;
+  });
+};
