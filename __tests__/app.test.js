@@ -131,10 +131,10 @@ describe.only("/api/reviews/:review_id/comments", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("GET - 400: Good request but id does not exist", () => {
+  test("GET - 404: Good request but id does not exist", () => {
     return request(app)
       .get("/api/reviews/9999/comments")
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");
       });
