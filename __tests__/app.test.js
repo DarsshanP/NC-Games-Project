@@ -92,7 +92,7 @@ describe("/api/reviews/:review_id", () => {
       });
   });
 });
-describe.only("/api/reviews/:review_id/comments", () => {
+describe("/api/reviews/:review_id/comments", () => {
   test("GET - 200: Returns the review with the correct ID", () => {
     return request(app)
       .get("/api/reviews/3/comments")
@@ -137,6 +137,42 @@ describe.only("/api/reviews/:review_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");
+      });
+  });
+});
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("POST - 201: Responds with the posted comment", () => {
+    const input = {
+      username: "mallionaire",
+      body: "Amazing game!",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(input)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.postedComment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: "mallionaire",
+            body: "Amazing game!",
+            review_id: 1,
+          })
+        );
+      });
+  });
+  test("POST:400 responds with an appropriate error message when provided with no username", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({
+        body: "Woop woop",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });

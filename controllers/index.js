@@ -3,6 +3,7 @@ const {
   getReviews,
   getReviewById,
   getCommentsByReview,
+  postCommentToReview,
 } = require("./reviews.controllers");
 
 module.exports = {
@@ -10,4 +11,5 @@ module.exports = {
   getReviews,
   getReviewById,
   getCommentsByReview,
+  postCommentToReview,
 };
