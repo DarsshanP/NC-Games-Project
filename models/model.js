@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkReviewExists } = require("../app_utils.js/utils");
 
 exports.fetchCategories = () => {
   let queryStr = "SELECT * FROM categories";
@@ -33,4 +34,21 @@ exports.fetchReviewById = (review_id) => {
     }
     return rows[0];
   });
+};
+
+exports.fetchCommentByReview = (review_id) => {
+  return checkReviewExists(review_id)
+    .then(() => {
+      let queryStr = `
+        SELECT  
+        comment_id, votes, created_at, author, body, review_id 
+        FROM comments WHERE review_id = $1
+        ORDER BY created_at DESC
+        `;
+
+      return db.query(queryStr, [review_id]);
+    })
+    .then(({ rows }) => {
+      return rows;
+    });
 };
