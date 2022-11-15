@@ -27,14 +27,6 @@ describe("GET-/api/categories", () => {
         });
       });
   });
-  test("GET - 404: Route not found", () => {
-    return request(app)
-      .get("/api/categorie")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
-      });
-  });
 });
 
 describe("GET-/api/reviews", () => {
@@ -61,17 +53,9 @@ describe("GET-/api/reviews", () => {
         });
       });
   });
-  test("GET - 404: Route not found", () => {
-    return request(app)
-      .get("/api/categorie")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
-      });
-  });
 });
 
-describe.only("/api/reviews/:review_id", () => {
+describe("/api/reviews/:review_id", () => {
   test("GET - 200: Returns the review with the correct ID", () => {
     return request(app)
       .get("/api/reviews/3")
@@ -91,14 +75,6 @@ describe.only("/api/reviews/:review_id", () => {
         });
       });
   });
-  test("GET - 404: Route not found", () => {
-    return request(app)
-      .get("/api/review/2")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
-      });
-  });
   test("GET - 400: Bad request", () => {
     return request(app)
       .get("/api/reviews/dog")
@@ -112,7 +88,18 @@ describe.only("/api/reviews/:review_id", () => {
       .get("/api/reviews/9999")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid Id");
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+});
+
+describe("404: Route not found", () => {
+  test("GET - 404: Route not found", () => {
+    return request(app)
+      .get("/api/review")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
       });
   });
 });
