@@ -27,14 +27,6 @@ describe("GET-/api/categories", () => {
         });
       });
   });
-  test("GET - 404: Route not found", () => {
-    return request(app)
-      .get("/api/categorie")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
-      });
-  });
 });
 
 describe("GET-/api/reviews", () => {
@@ -61,9 +53,50 @@ describe("GET-/api/reviews", () => {
         });
       });
   });
+});
+
+describe("/api/reviews/:review_id", () => {
+  test("GET - 200: Returns the review with the correct ID", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          review_id: 3,
+          title: "Ultimate Werewolf",
+          review_body: "We couldn't find the werewolf!",
+          designer: "Akihisa Okui",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          votes: 5,
+          category: "social deduction",
+          owner: "bainesface",
+          created_at: "2021-01-18T10:01:41.251Z",
+        });
+      });
+  });
+  test("GET - 400: Bad request", () => {
+    return request(app)
+      .get("/api/reviews/dog")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("GET - 400: Good request but id does not exist", () => {
+    return request(app)
+      .get("/api/reviews/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+});
+
+describe("404: Route not found", () => {
   test("GET - 404: Route not found", () => {
     return request(app)
-      .get("/api/categorie")
+      .get("/api/review")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");

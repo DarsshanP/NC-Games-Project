@@ -19,3 +19,18 @@ exports.fetchReviews = () => {
     return rows;
   });
 };
+
+exports.fetchReviewById = (review_id) => {
+  let queryStr = `
+      SELECT  
+      review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at 
+      FROM reviews WHERE review_id = $1
+      `;
+
+  return db.query(queryStr, [review_id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Id not found" });
+    }
+    return rows[0];
+  });
+};
