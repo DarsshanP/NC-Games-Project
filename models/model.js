@@ -1,5 +1,8 @@
 const db = require("../db/connection");
-const { checkReviewExists } = require("../app_utils.js/utils");
+const {
+  checkReviewExists,
+  checkUsernameExists,
+} = require("../app_utils.js/utils");
 const format = require("pg-format");
 
 exports.fetchCategories = () => {
@@ -55,12 +58,12 @@ exports.fetchCommentByReview = (review_id) => {
 };
 
 exports.insertComment = (review_id, data) => {
+  const { username, body } = data;
   return checkReviewExists(review_id)
     .then(() => {
-      const { username, body } = data;
-      if (username === undefined || body === undefined) {
-        return Promise.reject({ status: 400, msg: "Bad request" });
-      }
+      return checkUsernameExists(review_id, data);
+    })
+    .then(() => {
       const queryVals = [0, new Date(), username, body, review_id];
       const queryStr = `INSERT INTO comments (votes, created_at, author, body, review_id) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
       return db.query(queryStr, queryVals);
