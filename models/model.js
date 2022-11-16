@@ -1,5 +1,9 @@
 const db = require("../db/connection");
-const { checkReviewExists } = require("../app_utils.js/utils");
+const {
+  checkReviewExists,
+  checkUsernameExists,
+} = require("../app_utils.js/utils");
+const format = require("pg-format");
 
 exports.fetchCategories = () => {
   let queryStr = "SELECT * FROM categories";
@@ -50,5 +54,21 @@ exports.fetchCommentByReview = (review_id) => {
     })
     .then(({ rows }) => {
       return rows;
+    });
+};
+
+exports.insertComment = (review_id, data) => {
+  const { username, body } = data;
+  return checkReviewExists(review_id)
+    .then(() => {
+      return checkUsernameExists(review_id, data);
+    })
+    .then(() => {
+      const queryVals = [0, new Date(), username, body, review_id];
+      const queryStr = `INSERT INTO comments (votes, created_at, author, body, review_id) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+      return db.query(queryStr, queryVals);
+    })
+    .then(({ rows }) => {
+      return rows[0];
     });
 };

@@ -92,7 +92,7 @@ describe("/api/reviews/:review_id", () => {
       });
   });
 });
-describe.only("/api/reviews/:review_id/comments", () => {
+describe("/api/reviews/:review_id/comments", () => {
   test("GET - 200: Returns the review with the correct ID", () => {
     return request(app)
       .get("/api/reviews/3/comments")
@@ -137,6 +137,74 @@ describe.only("/api/reviews/:review_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");
+      });
+  });
+});
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("POST - 201: Responds with the posted comment", () => {
+    const input = {
+      username: "mallionaire",
+      body: "Amazing game!",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(input)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.postedComment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: "mallionaire",
+            body: "Amazing game!",
+            review_id: 1,
+          })
+        );
+      });
+  });
+  test("POST - 404 responds with an appropriate error message when provided with an invalid username ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({ username: "DarthShan", body: "Woop Woop" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username does not exist");
+      });
+  });
+  test("GET - 400: Bad request", () => {
+    return request(app)
+      .get("/api/reviews/dog/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("GET - 404: Good request but id does not exist", () => {
+    return request(app)
+      .get("/api/reviews/9999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+  test("POST - 400 responds with an appropriate error message when username is mispelled ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({ usernam: "mallionaire", body: "Woop Woop" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("POST - 400 responds with an appropriate error message when body is mispelled ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({ username: "mallionaire", boy: "Woop Woop" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
