@@ -55,7 +55,7 @@ describe("GET-/api/reviews", () => {
   });
 });
 
-describe("/api/reviews/:review_id", () => {
+describe.only("/api/reviews/:review_id", () => {
   test("GET - 200: Returns the review with the correct ID", () => {
     return request(app)
       .get("/api/reviews/3")
@@ -72,6 +72,7 @@ describe("/api/reviews/:review_id", () => {
           category: "social deduction",
           owner: "bainesface",
           created_at: "2021-01-18T10:01:41.251Z",
+          comment_count: 3,
         });
       });
   });
