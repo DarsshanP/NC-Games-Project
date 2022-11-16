@@ -72,3 +72,23 @@ exports.insertComment = (review_id, data) => {
       return rows[0];
     });
 };
+
+exports.updatedVote = (review_id, inc_vote) => {
+  return checkReviewExists(review_id)
+    .then(() => {
+      if (typeof inc_vote !== "number") {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      }
+      let queryStr = `
+          UPDATE reviews
+              SET votes = votes + ${inc_vote}
+          WHERE review_id = $1
+          RETURNING *
+        `;
+      const queryVals = [review_id];
+      return db.query(queryStr, queryVals);
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};

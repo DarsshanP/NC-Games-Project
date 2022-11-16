@@ -209,6 +209,65 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
+describe.only("PATCH /api/reviews/:review_id", () => {
+  test("PATCH - 200: Responds with updated review", () => {
+    const incVote = { inc_vote: 1 };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(incVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          title: "Agricola",
+          designer: "Uwe Rosenberg",
+          owner: "mallionaire",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          review_body: "Farmyard fun!",
+          review_id: 1,
+          category: "euro game",
+          created_at: "2021-01-18T10:00:20.514Z",
+          votes: 2,
+        });
+      });
+  });
+  test("PATCH - 400 responds with an appropriate error message when provided with an invalid inc_vote", () => {
+    const incVote = { inc_vote: "hello" };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(incVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("PATCH - 400: Bad request", () => {
+    return request(app)
+      .patch("/api/reviews/dog")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("PATCH - 404: Good request but id does not exist", () => {
+    return request(app)
+      .patch("/api/reviews/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+  test("PATCH - 400 responds with an appropriate error message when inc_vote is mispelled ", () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .send({ in_vote: 2 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("404: Route not found", () => {
   test("GET - 404: Route not found", () => {
     return request(app)
