@@ -4,6 +4,7 @@ const {
   getReviewById,
   getCommentsByReview,
   postCommentToReview,
+  patchReviewById,
 } = require("./reviews.controllers");
 
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   getReviewById,
   getCommentsByReview,
   postCommentToReview,
+  patchReviewById,
 };
