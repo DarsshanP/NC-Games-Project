@@ -402,10 +402,10 @@ describe("GET /api/users", () => {
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  test("GET 204: No content, after deleting a comment", () => {
+  test("DELETE 204: No content, after deleting a comment", () => {
     return request(app).delete("/api/comments/2").expect(204);
   });
-  test("GET 400: Invalid comment Id ", () => {
+  test("DELETE 400: Invalid comment Id ", () => {
     return request(app)
       .delete("/api/comments/dog")
       .expect(400)
@@ -413,7 +413,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("GET 400: Valid Id but does not exist ", () => {
+  test("DELETE 400: Valid Id but does not exist ", () => {
     return request(app)
       .delete("/api/comments/9999")
       .expect(404)
