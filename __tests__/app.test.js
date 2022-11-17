@@ -401,6 +401,28 @@ describe("GET /api/users", () => {
   });
 });
 
+describe.only("DELETE /api/comments/:comment_id", () => {
+  test("GET 204: No content, after deleting a comment", () => {
+    return request(app).delete("/api/comments/2").expect(204);
+  });
+  test("GET 400: Invalid comment Id ", () => {
+    return request(app)
+      .delete("/api/comments/dog")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("GET 400: Valid Id but does not exist ", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Id not found");
+      });
+  });
+});
+
 describe("404 Route not found Error handling", () => {
   test("GET - 404: Route not found", () => {
     return request(app)
