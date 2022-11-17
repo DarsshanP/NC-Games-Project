@@ -3,6 +3,7 @@ const {
   checkReviewExists,
   checkUsernameExists,
   categoryList,
+  checkCommentExists,
 } = require("../app_utils.js/utils");
 const format = require("pg-format");
 
@@ -143,5 +144,15 @@ exports.fetchUsers = () => {
       `;
   return db.query(queryStr).then(({ rows }) => {
     return rows;
+  });
+};
+
+exports.removeComment = (comment_id) => {
+  return checkCommentExists(comment_id).then(() => {
+    const queryStr = `
+    DELETE FROM comments WHERE comment_id = $1
+    `;
+
+    return db.query(queryStr, [comment_id]);
   });
 };
