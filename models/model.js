@@ -5,6 +5,7 @@ const {
   categoryList,
   checkCommentExists,
 } = require("../app_utils.js/utils");
+const { readFile } = require("fs/promises");
 const format = require("pg-format");
 
 exports.fetchCategories = () => {
@@ -154,5 +155,12 @@ exports.removeComment = (comment_id) => {
     `;
 
     return db.query(queryStr, [comment_id]);
+  });
+};
+
+exports.fetchEndpointList = () => {
+  return readFile("./endpoints.json").then((endpoints) => {
+    const parsedEndpoint = JSON.parse(endpoints);
+    return parsedEndpoint;
   });
 };

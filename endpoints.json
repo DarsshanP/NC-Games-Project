@@ -30,5 +30,100 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "Serves an object with the specified review_id",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "title": "Agricola",
+        "designer": "Uwe Rosenberg",
+        "owner": "mallionaire",
+        "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        "category": "euro game",
+        "created_at": 1610964020514,
+        "votes": 1
+      }
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "Serves an array of comments for the specified review",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "I loved this game too!",
+          "votes": 16,
+          "author": "bainesface",
+          "review_id": 2,
+          "created_at": 1511354613389
+        },
+        {
+          "body": "EPIC board game!",
+          "votes": 16,
+          "author": "bainesface",
+          "review_id": 2,
+          "created_at": 1511354163389
+        },
+        {
+          "body": "Now this is a story all about how, board games turned my life upside down",
+          "votes": 13,
+          "author": "mallionaire",
+          "review_id": 2,
+          "created_at": 1610965445410
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "Serves an array of user objects",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "mallionaire",
+          "name": "haz",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'"
+        },
+        {
+          "username": "philippaclaire9",
+          "name": "philippa",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "Posts a comment to a specified review, responds with the posted comment",
+    "queries": [],
+    "exampleResponse": {
+      "postedComment": {
+        "body": "I loved this game too!",
+        "votes": 16,
+        "author": "bainesface",
+        "review_id": 2,
+        "created_at": 1511354613389
+      }
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "Updates the vote count by a specified number, responds with the updated review",
+    "queries": [],
+    "exampleResponse": {
+      "updatedReview": {
+        "title": "One Night Ultimate Werewolf",
+        "designer": "Akihisa Okui",
+        "owner": "happyamy2016",
+        "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+        "category": "hidden-roles",
+        "created_at": 1610964101251,
+        "votes": 5
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes the comment specified by the comment_id, responds with status 204 and no content",
+    "queries": [],
+    "exampleResponse": 204
   }
 }

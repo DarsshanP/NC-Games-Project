@@ -1,5 +1,6 @@
 const { getCategories } = require("./categories.controllers");
 const { getUsers, deleteCommentById } = require("./users.controllers");
+const { getEndpointList } = require("./apiController");
 const {
   getReviews,
   getReviewById,
@@ -17,4 +18,5 @@ module.exports = {
   patchReviewById,
   getUsers,
   deleteCommentById,
+  getEndpointList,
 };
