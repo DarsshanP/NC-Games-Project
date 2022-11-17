@@ -1,4 +1,5 @@
 const { getCategories } = require("./categories.controllers");
+const { getUsers } = require("./users.controllers");
 const {
   getReviews,
   getReviewById,
@@ -14,4 +15,5 @@ module.exports = {
   getCommentsByReview,
   postCommentToReview,
   patchReviewById,
+  getUsers,
 };
