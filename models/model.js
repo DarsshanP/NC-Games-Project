@@ -2,6 +2,7 @@ const db = require("../db/connection");
 const {
   checkReviewExists,
   checkUsernameExists,
+  categoryList,
 } = require("../app_utils.js/utils");
 const format = require("pg-format");
 
@@ -12,17 +13,59 @@ exports.fetchCategories = () => {
   });
 };
 
-exports.fetchReviews = () => {
-  let queryStr = `
-    SELECT 
-    owner, title, reviews.review_id, category, review_img_url, reviews.created_at, designer, reviews.votes, COUNT(comments.review_id)::INT AS comment_count FROM reviews
-    LEFT JOIN comments ON reviews.review_id = comments.review_id
+exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
+  return categoryList()
+    .then(({ rows }) => {
+      const categoryVal = [];
+      const sortWhitelist = [
+        "title",
+        "designer",
+        "owner",
+        "review_img_url",
+        "review_body",
+        "category",
+        "created_at",
+        "votes",
+        "comment_count",
+      ];
+      const orderWhitelist = ["ASC", "DESC"];
+
+      const categoryWhitelist = rows.map((category) => {
+        return category.slug;
+      });
+
+      if (category) {
+        if (!categoryWhitelist.includes(category)) {
+          return Promise.reject({ status: 400, msg: "Invalid category" });
+        }
+      }
+
+      if (!sortWhitelist.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: "Invalid sort query" });
+      }
+
+      if (!orderWhitelist.includes(order.toUpperCase())) {
+        return Promise.reject({ status: 400, msg: "Invalid order query" });
+      }
+
+      let queryStr = `
+      SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, designer, reviews.votes, COUNT(comments.review_id)::INT AS comment_count FROM reviews
+      LEFT JOIN comments ON reviews.review_id = comments.review_id`;
+
+      if (category) {
+        queryStr += ` WHERE category = $1`;
+        categoryVal.push(category);
+      }
+
+      queryStr += ` 
     GROUP BY reviews.owner, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, designer, reviews.votes
-    ORDER BY reviews.created_at DESC;
+    ORDER BY ${sort_by} ${order};
     `;
-  return db.query(queryStr).then(({ rows }) => {
-    return rows;
-  });
+      return db.query(queryStr, categoryVal);
+    })
+    .then(({ rows }) => {
+      return rows;
+    });
 };
 
 exports.fetchReviewById = (review_id) => {

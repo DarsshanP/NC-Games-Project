@@ -27,16 +27,6 @@ describe("GET-/api/categories", () => {
         });
       });
   });
-  describe("404: Route not found", () => {
-    test("GET - 404: Route not found", () => {
-      return request(app)
-        .get("/api/category")
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Route not found");
-        });
-    });
-  });
 });
 
 describe("GET-/api/reviews", () => {
@@ -63,15 +53,98 @@ describe("GET-/api/reviews", () => {
         });
       });
   });
-  describe("404: Route not found", () => {
-    test("GET - 404: Route not found", () => {
-      return request(app)
-        .get("/api/review")
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Route not found");
+  test("GET - 200: Responds with array of reviews filted by category", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(1);
+        expect(body).toMatchObject([
+          {
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 5,
+          },
+        ]);
+      });
+  });
+  test("GET - 200: Responds with an empty array when category is valid but has no reviews", () => {
+    return request(app)
+      .get("/api/reviews?category=children's games")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(0);
+        expect(body).toMatchObject([]);
+      });
+  });
+  test("GET - 400: Invalid category", () => {
+    return request(app)
+      .get("/api/reviews?category=driving")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid category");
+      });
+  });
+  test("GET - 200: Responds with an array sorted by the query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeSortedBy("title", { descending: true });
+      });
+  });
+  test("GET - 400: Ivalid sort query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=game")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort query");
+      });
+  });
+  test("GET - 200: Responds with an array of reviews ordered by the query", () => {
+    return request(app)
+      .get("/api/reviews?order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("GET - 400: Invalid order query", () => {
+    return request(app)
+      .get("/api/reviews?order=hello")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+  test("GET - 200: Responds with an array of reviews that has been sorted, ordered and categorised", () => {
+    return request(app)
+      .get("/api/reviews?category=social deduction&sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeSortedBy("title", { descending: false });
+        expect(body.length).toBe(11);
+        body.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: "social deduction",
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              designer: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
         });
-    });
+      });
   });
 });
 
@@ -213,17 +286,17 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(body.msg).toBe("Username does not exist");
       });
   });
-  test("GET - 400: Bad request", () => {
+  test("POST - 400: Bad request", () => {
     return request(app)
-      .get("/api/reviews/dog/comments")
+      .post("/api/reviews/dog/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("GET - 404: Good request but id does not exist", () => {
+  test("POST - 404: Good request but id does not exist", () => {
     return request(app)
-      .get("/api/reviews/9999/comments")
+      .post("/api/reviews/9999/comments")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");
@@ -326,9 +399,12 @@ describe("GET /api/users", () => {
         });
       });
   });
+});
+
+describe("404 Route not found Error handling", () => {
   test("GET - 404: Route not found", () => {
     return request(app)
-      .get("/api/user")
+      .get("/api/category")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");
