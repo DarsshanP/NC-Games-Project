@@ -27,6 +27,16 @@ describe("GET-/api/categories", () => {
         });
       });
   });
+  describe("404: Route not found", () => {
+    test("GET - 404: Route not found", () => {
+      return request(app)
+        .get("/api/category")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Route not found");
+        });
+    });
+  });
 });
 
 describe("GET-/api/reviews", () => {
@@ -52,6 +62,16 @@ describe("GET-/api/reviews", () => {
           );
         });
       });
+  });
+  describe("404: Route not found", () => {
+    test("GET - 404: Route not found", () => {
+      return request(app)
+        .get("/api/review")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Route not found");
+        });
+    });
   });
 });
 
@@ -209,7 +229,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
   test("PATCH - 200: Responds with updated review", () => {
     const incVote = { inc_vote: 1 };
     return request(app)
@@ -268,10 +288,27 @@ describe.only("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe("404: Route not found", () => {
+describe.only("GET /api/users", () => {
+  test("GET - 200: Responds with an array of user data", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        body.forEach((category) => {
+          expect(category).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
+      });
+  });
   test("GET - 404: Route not found", () => {
     return request(app)
-      .get("/api/review")
+      .get("/api/user")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");

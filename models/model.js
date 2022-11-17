@@ -92,3 +92,12 @@ exports.updatedVote = (review_id, inc_vote) => {
       return rows[0];
     });
 };
+
+exports.fetchUsers = () => {
+  let queryStr = `
+      SELECT * FROM users
+      `;
+  return db.query(queryStr).then(({ rows }) => {
+    return rows;
+  });
+};
