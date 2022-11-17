@@ -55,13 +55,32 @@ describe("GET-/api/reviews", () => {
   });
 });
 
-describe.only("/api/reviews/:review_id", () => {
+describe("/api/reviews/:review_id", () => {
   test("GET - 200: Returns the review with the correct ID", () => {
     return request(app)
       .get("/api/reviews/3")
       .expect(200)
       .then(({ body }) => {
-        expect(body).toEqual({
+        expect(body).toMatchObject({
+          review_id: 3,
+          title: "Ultimate Werewolf",
+          review_body: "We couldn't find the werewolf!",
+          designer: "Akihisa Okui",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          votes: 5,
+          category: "social deduction",
+          owner: "bainesface",
+          created_at: "2021-01-18T10:01:41.251Z",
+        });
+      });
+  });
+  test("GET - 200: Returns the review with an added comment_count property", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
           review_id: 3,
           title: "Ultimate Werewolf",
           review_body: "We couldn't find the werewolf!",
@@ -210,7 +229,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
   test("PATCH - 200: Responds with updated review", () => {
     const incVote = { inc_vote: 1 };
     return request(app)
