@@ -73,6 +73,15 @@ describe("GET-/api/reviews", () => {
         ]);
       });
   });
+  test("GET - 200: Responds with an empty array when category is valid but has no reviews", () => {
+    return request(app)
+      .get("/api/reviews?category=children's games")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(0);
+        expect(body).toMatchObject([]);
+      });
+  });
   test("GET - 400: Invalid category", () => {
     return request(app)
       .get("/api/reviews?category=driving")
@@ -277,17 +286,17 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(body.msg).toBe("Username does not exist");
       });
   });
-  test("GET - 400: Bad request", () => {
+  test("POST - 400: Bad request", () => {
     return request(app)
-      .get("/api/reviews/dog/comments")
+      .post("/api/reviews/dog/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("GET - 404: Good request but id does not exist", () => {
+  test("POST - 404: Good request but id does not exist", () => {
     return request(app)
-      .get("/api/reviews/9999/comments")
+      .post("/api/reviews/9999/comments")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Id not found");

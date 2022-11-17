@@ -44,7 +44,7 @@ exports.categoryList = () => {
   return db
     .query(
       `
-    SELECT category FROM reviews
+    SELECT slug FROM categories
     `
     )
     .then((results) => {

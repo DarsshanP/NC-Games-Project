@@ -31,7 +31,7 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
       const orderWhitelist = ["ASC", "DESC"];
 
       const categoryWhitelist = rows.map((category) => {
-        return category.category;
+        return category.slug;
       });
 
       if (category) {
