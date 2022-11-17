@@ -29,7 +29,7 @@ describe("GET-/api/categories", () => {
   });
 });
 
-describe.only("GET-/api/reviews", () => {
+describe("GET-/api/reviews", () => {
   test("GET-200: Responds with array of review objects", () => {
     return request(app)
       .get("/api/reviews")
