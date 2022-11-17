@@ -288,14 +288,14 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
   test("GET - 200: Responds with an array of user data", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        expect(body.length).toBe(4);
-        body.forEach((category) => {
+        expect(body.users.length).toBe(4);
+        body.users.forEach((category) => {
           expect(category).toEqual(
             expect.objectContaining({
               username: expect.any(String),
