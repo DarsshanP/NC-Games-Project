@@ -39,3 +39,15 @@ exports.checkUsernameExists = (review_id, data) => {
       }
     });
 };
+
+exports.categoryList = () => {
+  return db
+    .query(
+      `
+    SELECT category FROM reviews
+    `
+    )
+    .then((results) => {
+      return results;
+    });
+};
