@@ -1,6 +1,6 @@
 # Project Summary
 
-In this project I have built an API that allows you to access and interact with a database to provide information to front-end architecture. The purpose of this was to mimic real world backend services and gain experience in that field.
+In this project I have built a RESTful API that allows you to access and interact with a database to provide information to front-end architecture. The purpose of this was to mimic real world backend services and gain experience in that field.
 
 Here is a link to the hosted version of this API:
 [NC-Games-Hosted](https://github.com/DarthShan/NC-Games-Hosted)
