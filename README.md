@@ -12,13 +12,7 @@ As well as a link to a webpage where you can interact with the server:
 
 # Running the repo
 
-To clone this repo paste the code below into your terminal:
-
-```
-git clone https://github.com/DarthShan/NC-Games-Project.git
-```
-
-Once inside the repo, install the necessary dependencies using your terminal with the line:
+For and clone this repo and then once inside install the necessary dependencies using your terminal with the line:
 
 ```
 npm i
