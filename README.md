@@ -2,15 +2,20 @@
 
 In this project I have built a RESTful API that allows you to access and interact with a database to provide information to front-end architecture. The purpose of this was to mimic real world backend services and gain experience in that field.
 
-Here is a link to the hosted version of this API:
+Here is a link to the hosted repo of this API:
+
 [NC-Games-Hosted](https://github.com/DarthShan/NC-Games-Hosted)
+
+As well as a link to a webpage where you can interact with the server:
+
+[Cylic App](https://scary-cow-bathing-suit.cyclic.app/api)
 
 # Running the repo
 
-To clone this repo, create a fork on github copy the code link and type into your terminal, replacing 'url_here' with the copied link:
+To clone this repo paste the code below into your terminal:
 
 ```
-git clone url_here
+git clone https://github.com/DarthShan/NC-Games-Project.git
 ```
 
 Once inside the repo, install the necessary dependencies using your terminal with the line:
